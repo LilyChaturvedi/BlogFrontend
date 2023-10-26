@@ -20,6 +20,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchData();
+    console.log(data, "data");
   }, []);
 
   if (loading) return <h5>Loading....</h5>;
