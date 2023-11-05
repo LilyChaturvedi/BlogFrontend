@@ -1,9 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
 export const validateemail = new RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");
 const Login = (props) => {
+  const priyaNavigate = useNavigate();
+
   const [isSubmit, setIsSubmit] = useState(false);
   const [emailValidate, setemailValidate] = useState("");
   const [passwordValidate, setpasswordValidate] = useState("");
@@ -32,10 +35,15 @@ const Login = (props) => {
     e.preventDefault();
     setIsSubmit(true);
     try {
-      const response = await axios.post(
+      const { data } = await axios.post(
         "http://localhost:3000/api/auth/login",
         inputVal
       );
+      console.log("data:", data);
+
+      localStorage.setItem("token", data.result.refreshToken);
+      priyaNavigate("/");
+
       setIsSubmit(false);
       toast.success("successfully Login");
       inputVal.email = "";

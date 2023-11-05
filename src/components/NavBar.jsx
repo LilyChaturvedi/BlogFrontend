@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from "react";
 import About from "../pages/About";
 import Help from "../pages/Help";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import Login from "../pages/Login";
 import { Button } from "@mui/material";
 
 const NavBar = ({ children }) => {
   const [islogin, setIsLogin] = useState(false);
+  const [token, setToken] = useState("");
+  const navigate = useNavigate();
+  useEffect(() => {
+    setToken(localStorage.getItem("token"));
+    return () => {};
+  });
+  const logoutHandler = () => {
+    localStorage.removeItem("token");
+    navigate("/Login");
+  };
+
   // const loginPageHandler = () => {
   //   props.setIsLogin(!props.value);
   // };
@@ -38,20 +49,47 @@ const NavBar = ({ children }) => {
           style={{
             width: "12rem",
             display: "flex",
+
             justifyContent: "space-between",
           }}
         >
-          <Button onClick={() => loginPageHandler()}>
-            <Link to="Login">Login</Link>
-          </Button>
+          {!token ? (
+            <>
+              <Button onClick={() => loginPageHandler()}>
+                <Link to="Login">Login</Link>
+              </Button>
 
-          <button>
-            <Link to="signUp">signUp</Link>
-          </button>
+              <button>
+                <Link to="signUp">signUp</Link>
+              </button>
+            </>
+          ) : (
+            <button onClick={() => logoutHandler()}>Logout</button>
+          )}
         </div>
       </div>
-
-      <Outlet />
+      {/* sideBar  */}
+      <div
+        style={{
+          display: "flex",
+          height: "100%",
+        }}
+      >
+        <div
+          style={{
+            width: "10%",
+            display: "flex",
+            flexDirection: "column",
+            backgroundColor: "grey",
+          }}
+        >
+          <Link to="notification">Notification</Link>
+          <Link to="search">Search</Link>
+        </div>
+        <div style={{ width: "70%" }}>
+          <Outlet />
+        </div>
+      </div>
     </>
   );
 };

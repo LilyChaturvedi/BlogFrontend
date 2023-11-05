@@ -1,11 +1,13 @@
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 export const validateemail = new RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");
 const Signup = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [emailValidate, setemailValidate] = useState("");
   const [passwordValidate, setpasswordValidate] = useState("");
+  const navigate = useNavigate();
   const [inputVal, setInputVal] = useState({
     firstName: "",
     lastName: "",
@@ -36,11 +38,15 @@ const Signup = () => {
         "http://localhost:3000/api/auth/register",
         inputVal
       );
+      console.log(response, "signup");
+      // localStorage("token",response.data.r)
+
       setIsSubmit(false);
       inputVal.firstName = "";
       inputVal.lastName = "";
       inputVal.email = "";
       inputVal.password = "";
+      navigate("/Login");
     } catch (err) {
       console.log(err);
     }
